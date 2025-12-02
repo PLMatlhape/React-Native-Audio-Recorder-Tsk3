@@ -8,9 +8,9 @@ import { PermissionsService } from './services/permissionsService';
 
 const App: React.FC = () => {
   useEffect(() => {
+    // Initialize permissions on app start for mobile
     if (Platform.OS !== 'web') {
-      // Request permissions on app start
-      PermissionsService.checkPermissions();
+      PermissionsService.initializePermissions();
     }
   }, []);
 
