@@ -2,13 +2,13 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Alert,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Alert,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import AnimatedSphere from '../components/AnimatedSphere';
 import { AudioService } from '../services/audioService';
@@ -30,22 +30,32 @@ type RecordingScreenProps = {
 const RecordingScreen: React.FC<RecordingScreenProps> = ({ navigation }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [recordTime] = useState(0);
-  const [audioLevel] = useState(0);
+  const [recordTime, setRecordTime] = useState(0);
+  const [audioLevel, setAudioLevel] = useState(0);
   const [title, setTitle] = useState('');
   const audioService = useRef(new AudioService()).current;
   const recordingPath = useRef<string>('');
+  const finalRecordTime = useRef<number>(0);
 
   useEffect(() => {
     checkPermissions();
     
-    // audioService.onRecordProgress is not available in web stub
+    // Set up recording progress callback
+    audioService.onRecordProgress((data) => {
+      setRecordTime(data.currentPosition);
+      finalRecordTime.current = data.currentPosition;
+      if (data.currentMetering !== undefined) {
+        // Normalize metering value to 0-100 range
+        const normalizedLevel = Math.min(100, Math.max(0, (data.currentMetering + 60) * 2));
+        setAudioLevel(normalizedLevel);
+      }
+    });
 
     return () => {
       if (isRecording) {
         audioService.stopRecording();
       }
-      // audioService.removeRecordListener();
+      audioService.removeRecordListener();
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -69,6 +79,8 @@ const RecordingScreen: React.FC<RecordingScreenProps> = ({ navigation }) => {
         return;
       }
 
+      setRecordTime(0);
+      finalRecordTime.current = 0;
       const path = await audioService.startRecording('high');
       recordingPath.current = path ?? '';
       setIsRecording(true);
@@ -133,7 +145,7 @@ const RecordingScreen: React.FC<RecordingScreenProps> = ({ navigation }) => {
         id: Date.now().toString(),
         title: title.trim() || `Recording ${new Date().toLocaleDateString()}`,
         uri: recordingPath.current,
-        duration: recordTime,
+        duration: finalRecordTime.current, // Use the final recorded time
         date: new Date(),
         size: fileSize,
       };

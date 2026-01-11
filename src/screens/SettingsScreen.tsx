@@ -140,130 +140,183 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
               thumbColor={COLORS.text}
             />
           </View>
-    </View>
+        </View>
 
-    <View style={styles.section}>
-      <Text style={styles.sectionTitle}>About</Text>
-      <View style={styles.infoRow}>
-        <Text style={styles.infoLabel}>Version</Text>
-        <Text style={styles.infoValue}>1.0.0</Text>
-      </View>
-      <View style={styles.infoRow}>
-        <Text style={styles.infoLabel}>Developer</Text>
-        <Text style={styles.infoValue}>Audio Recorder Team</Text>
-      </View>
-    </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>About</Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Version</Text>
+            <Text style={styles.infoValue}>1.0.0</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Developer</Text>
+            <Text style={styles.infoValue}>PLMatlhape</Text>
+          </View>
+        </View>
 
-    <TouchableOpacity
-      style={styles.feedbackButton}
-      onPress={() => Alert.alert('Feedback', 'Coming soon!')}
-    >
-      <MaterialIcons name="feedback" size={24} color={COLORS.primary} />
-      <Text style={styles.feedbackText}>Send Feedback</Text>
-    </TouchableOpacity>
-  </ScrollView>
-</View>
-);
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Feedback & Support</Text>
+          <Text style={styles.sectionDescription}>
+            We would love to hear from you! Share your feedback or get help.
+          </Text>
+          
+          <TouchableOpacity
+            style={styles.supportButton}
+            onPress={() => {
+              Alert.alert(
+                'Send Feedback',
+                'How would you like to reach us?',
+                [
+                  { text: 'Cancel', style: 'cancel' },
+                  { 
+                    text: 'Rate App', 
+                    onPress: () => Alert.alert('Thank you!', 'Rating feature coming soon.') 
+                  },
+                  { 
+                    text: 'Email Us', 
+                    onPress: () => Alert.alert('Email', 'Contact: support@audiorecorder.app') 
+                  },
+                ]
+              );
+            }}
+          >
+            <MaterialIcons name="feedback" size={24} color={COLORS.primary} />
+            <Text style={styles.supportButtonText}>Send Feedback</Text>
+            <MaterialIcons name="chevron-right" size={24} color={COLORS.textSecondary} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.supportButton}
+            onPress={() => {
+              Alert.alert(
+                'Help & FAQ',
+                '• Tap the + button to start recording\n• Tap on a recording to play it\n• Tap the edit icon to rename\n• Tap the delete icon to remove\n• Use the search bar to find recordings\n\nFor more help, contact support.',
+                [{ text: 'Got it' }]
+              );
+            }}
+          >
+            <MaterialIcons name="help" size={24} color={COLORS.primary} />
+            <Text style={styles.supportButtonText}>Help & FAQ</Text>
+            <MaterialIcons name="chevron-right" size={24} color={COLORS.textSecondary} />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>Made with ❤️ for CodeTribe Assessment</Text>
+        </View>
+      </ScrollView>
+    </View>
+  );
 };
+
 const styles = StyleSheet.create({
-container: {
-flex: 1,
-backgroundColor: COLORS.background,
-},
-header: {
-flexDirection: 'row',
-justifyContent: 'space-between',
-alignItems: 'center',
-paddingHorizontal: 20,
-paddingTop: 20,
-paddingBottom: 12,
-},
-backButton: {
-padding: 8,
-},
-headerTitle: {
-fontSize: 20,
-fontWeight: '600',
-color: COLORS.text,
-},
-content: {
-flex: 1,
-padding: 20,
-},
-section: {
-marginBottom: 32,
-},
-sectionTitle: {
-fontSize: 18,
-fontWeight: '600',
-color: COLORS.text,
-marginBottom: 8,
-},
-sectionDescription: {
-fontSize: 14,
-color: COLORS.textSecondary,
-marginBottom: 16,
-},
-optionsContainer: {
-flexDirection: 'row',
-flexWrap: 'wrap',
-gap: 12,
-},
-optionButton: {
-paddingHorizontal: 20,
-paddingVertical: 12,
-borderRadius: 12,
-backgroundColor: COLORS.surface,
-borderWidth: 2,
-borderColor: COLORS.border,
-},
-optionButtonActive: {
-backgroundColor: COLORS.primary + '30',
-borderColor: COLORS.primary,
-},
-optionText: {
-fontSize: 16,
-color: COLORS.text,
-},
-optionTextActive: {
-color: COLORS.primary,
-fontWeight: '600',
-},
-switchRow: {
-flexDirection: 'row',
-justifyContent: 'space-between',
-alignItems: 'center',
-},
-infoRow: {
-flexDirection: 'row',
-justifyContent: 'space-between',
-paddingVertical: 12,
-borderBottomWidth: 1,
-borderBottomColor: COLORS.border,
-},
-infoLabel: {
-fontSize: 16,
-color: COLORS.textSecondary,
-},
-infoValue: {
-fontSize: 16,
-color: COLORS.text,
-fontWeight: '500',
-},
-feedbackButton: {
-flexDirection: 'row',
-alignItems: 'center',
-justifyContent: 'center',
-padding: 16,
-backgroundColor: COLORS.surface,
-borderRadius: 12,
-marginTop: 20,
-gap: 12,
-},
-feedbackText: {
-fontSize: 16,
-fontWeight: '600',
-color: COLORS.primary,
-},
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 12,
+  },
+  backButton: {
+    padding: 8,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: COLORS.text,
+  },
+  content: {
+    flex: 1,
+    padding: 20,
+  },
+  section: {
+    marginBottom: 32,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: COLORS.text,
+    marginBottom: 8,
+  },
+  sectionDescription: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+    marginBottom: 16,
+  },
+  optionsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  optionButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 12,
+    backgroundColor: COLORS.surface,
+    borderWidth: 2,
+    borderColor: COLORS.border,
+  },
+  optionButtonActive: {
+    backgroundColor: COLORS.primary + '30',
+    borderColor: COLORS.primary,
+  },
+  optionText: {
+    fontSize: 16,
+    color: COLORS.text,
+  },
+  optionTextActive: {
+    color: COLORS.primary,
+    fontWeight: '600',
+  },
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+  },
+  infoLabel: {
+    fontSize: 16,
+    color: COLORS.textSecondary,
+  },
+  infoValue: {
+    fontSize: 16,
+    color: COLORS.text,
+    fontWeight: '500',
+  },
+  supportButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: COLORS.surface,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  supportButtonText: {
+    flex: 1,
+    fontSize: 16,
+    color: COLORS.text,
+    marginLeft: 12,
+  },
+  footer: {
+    alignItems: 'center',
+    paddingVertical: 24,
+    marginTop: 8,
+  },
+  footerText: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+  },
 });
+
 export default SettingsScreen;
