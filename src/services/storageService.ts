@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as FileSystem from 'expo-file-system';
 import { Platform } from 'react-native';
 import { AppSettings, VoiceNote } from '../types';
 import { STORAGE_KEYS } from '../utils/constants';
@@ -40,10 +41,16 @@ export class StorageService {
       const notes = await this.getAllVoiceNotes();
       const noteToDelete = notes.find(note => note.id === id);
       
-      if (noteToDelete && Platform.OS !== 'web') {
-        // Delete the audio file (mobile only)
-        // TODO: Implement with expo-file-system when adding native support
-        console.warn('File deletion not yet implemented for mobile');
+      // Delete the audio file if it exists
+      if (noteToDelete && noteToDelete.uri && Platform.OS !== 'web') {
+        try {
+          const fileInfo = await FileSystem.getInfoAsync(noteToDelete.uri);
+          if (fileInfo.exists) {
+            await FileSystem.deleteAsync(noteToDelete.uri);
+          }
+        } catch (fileError) {
+          console.warn('Could not delete audio file:', fileError);
+        }
       }
       
       const updatedNotes = notes.filter(note => note.id !== id);
@@ -106,11 +113,26 @@ export class StorageService {
   static async getFileSize(uri: string): Promise<number> {
     try {
       if (Platform.OS === 'web') {
-        // For web, approximate size from blob URL
-        // TODO: Implement proper size calculation
+        // For web, try to fetch blob and get size
+        if (uri && uri.startsWith('blob:')) {
+          try {
+            const response = await fetch(uri);
+            const blob = await response.blob();
+            return blob.size;
+          } catch {
+            return 0;
+          }
+        }
         return 0;
       }
-      // TODO: Implement with expo-file-system when adding native support
+      
+      // For mobile, use expo-file-system
+      if (!uri) return 0;
+      
+      const fileInfo = await FileSystem.getInfoAsync(uri);
+      if (fileInfo.exists && 'size' in fileInfo) {
+        return fileInfo.size || 0;
+      }
       return 0;
     } catch (error) {
       console.error('Error getting file size:', error);
